@@ -20,3 +20,11 @@ export const updateOfficeVisitStatusById = gql`
     }
   }
 `;
+
+export const updateOfficeVisitorById = gql`
+  mutation UpdateOfficeVisitorById($input: UpdateOfficeVisitorInput!) {
+    updateOfficeVisitorById(input: $input) {
+      status
+    }
+  }
+`;

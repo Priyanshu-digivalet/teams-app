@@ -29,6 +29,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { StatusDropdown } from "../statusDropdown/StatusDropdown";
 import { useVisitors } from "../../graphql/hooks/hooks";
+import { EditFormModal } from "../editFormModal/EditFormModal";
 
 export const RecordTable = ({
   selectedSection,
@@ -38,12 +39,13 @@ export const RecordTable = ({
   const [selectedItem, setSelectedItem] = useState<Visitor>();
   const [isVisitorDetailModalOpen, setIsVisitorDetailModalOpen] =
     useState(false);
+  const [isVisitorEditModalOpen, setIsVisitorEditModalOpen] = useState(false);
 
   const { loadingVisitors, viditorData, refetch } =
     useVisitors(selectedSection);
 
   useEffect(() => {
-    console.log("calling refetch");
+    // console.log("calling refetch");
     refetch();
   }, [selectedSection, refetch]);
 
@@ -179,7 +181,16 @@ export const RecordTable = ({
                   >
                     View Details
                   </MenuItem>
-                  <MenuItem icon={<EditRegular />}>Edit</MenuItem>
+                  <MenuItem
+                    icon={<EditRegular />}
+                    onClick={() => {
+                      setIsVisitorEditModalOpen(true);
+                      setSelectedItem({ ...item });
+                      // console.log("clicked menu");
+                    }}
+                  >
+                    Edit
+                  </MenuItem>
                 </MenuList>
               </MenuPopover>
             </Menu>
@@ -230,6 +241,15 @@ export const RecordTable = ({
         <VisitorDetailModal
           isVisitorDetailModalOpen={isVisitorDetailModalOpen}
           setIsVisitorDetailModalOpen={setIsVisitorDetailModalOpen}
+          data={selectedItem}
+        />
+      ) : (
+        ""
+      )}
+      {isVisitorEditModalOpen ? (
+        <EditFormModal
+          isVisitorEditModalOpen={isVisitorEditModalOpen}
+          setIsVisitorEditModalOpen={setIsVisitorEditModalOpen}
           data={selectedItem}
         />
       ) : (

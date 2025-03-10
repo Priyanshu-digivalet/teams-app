@@ -10,7 +10,7 @@ export const Sidebar = ({
   selectedSection: string;
   setSelectedSection: React.Dispatch<React.SetStateAction<string>>;
 }) => {
-  console.log(selectedSection);
+  // console.log(selectedSection);
   return (
     <div className={` sidebar ${openSidebar ? "open-sidebar" : ""}`}>
       <MenuList>

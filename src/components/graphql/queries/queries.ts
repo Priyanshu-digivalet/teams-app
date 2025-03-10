@@ -33,8 +33,12 @@ export const getOfficeVisits = gql`
           id
         }
         officeVisitor {
-          fullName
+          id
           email
+          fullName
+          title
+          fname
+          lname
         }
         customFields {
           label

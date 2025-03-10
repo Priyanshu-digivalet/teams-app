@@ -1,6 +1,5 @@
 import {
   Dialog,
-  DialogTrigger,
   DialogSurface,
   DialogTitle,
   DialogContent,
@@ -13,29 +12,28 @@ import {
   Option,
   Field,
 } from "@fluentui/react-components";
-import { DatePicker } from "@fluentui/react-datepicker-compat";
-import { useState } from "react";
 import Logo from "../../assets/images/digivaletLogo.svg";
-import "./FormModal.css";
-import { TimePicker } from "@fluentui/react-timepicker-compat";
 import {
-  useAddOfficeVisit,
   useCustomFields,
-  usePropertyLocations,
-  useVisitorTypes,
+  useUpdateOfficeVisitorById,
 } from "../../graphql/hooks/hooks";
-import { VisitorLocationType, VisitorType } from "../../types";
+import { Visitor } from "../../types";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 
-export const FormModal = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [visitType, setVisitType] = useState("");
-
-  const { loadingVisitorTypesData, visitorTypesData } = useVisitorTypes();
-  const { customFieldsData } = useCustomFields(visitType);
-  const { addOfficeVisitorFunction, addVisitorDataError } = useAddOfficeVisit();
-  const { loadingVisitorLocationsData, visitorLocationsData } =
-    usePropertyLocations();
+export const EditFormModal = ({
+  data,
+  isVisitorEditModalOpen,
+  setIsVisitorEditModalOpen,
+}: {
+  data: Visitor | undefined;
+  isVisitorEditModalOpen: boolean;
+  setIsVisitorEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const [isFormChanged, setIsFormChanged] = useState(false);
+  const { customFieldsData } = useCustomFields(data?.officeVisitorType.id!);
+  const { updateVisitorById, updateVisitorByIdError } =
+    useUpdateOfficeVisitorById();
 
   const {
     register,
@@ -43,34 +41,48 @@ export const FormModal = () => {
     setValue,
     trigger,
     reset,
+    watch,
     formState: { errors, isSubmitting },
-  } = useForm({ mode: "onTouched", reValidateMode: "onChange" });
+  } = useForm({
+    mode: "onTouched",
+    reValidateMode: "onChange",
+  });
 
   const titleOptions = ["Mr", "Mrs", "Ms", "Miss"];
 
-  function onsubmit(data: any) {
-    // console.log(data);
-    addOfficeVisitorFunction(data, customFieldsData);
-    // console.log(addVisitorDataError);
-    if (!addVisitorDataError) {
+  useEffect(() => {
+    setValue("title", data?.officeVisitor.title);
+    trigger("title");
+  }, []);
+
+  const formValues = watch();
+
+  useEffect(() => {
+    const isChanged =
+      formValues.title !== data?.officeVisitor.title ||
+      formValues.fname !== data?.officeVisitor.fname ||
+      formValues.lname !== data?.officeVisitor.lname;
+
+    setIsFormChanged(isChanged);
+  }, [formValues]);
+
+  function onsubmit(formData: any) {
+    // console.log(formData);
+    updateVisitorById(data?.officeVisitor.id!, formData, customFieldsData);
+    if (!updateVisitorByIdError) {
       reset();
-      setIsDialogOpen(false);
+      setIsVisitorEditModalOpen(false);
     }
   }
 
   return (
     <Dialog
       modalType="non-modal"
-      open={isDialogOpen}
+      open={isVisitorEditModalOpen}
       onOpenChange={(_, { open }) => {
-        setIsDialogOpen(open), reset();
+        setIsVisitorEditModalOpen(open), reset();
       }}
     >
-      <DialogTrigger disableButtonEnhancement>
-        <Button appearance="primary" onClick={() => setIsDialogOpen(true)}>
-          Create Visit
-        </Button>
-      </DialogTrigger>
       <DialogSurface
         aria-describedby={undefined}
         backdrop={<div aria-hidden="true"></div>}
@@ -87,7 +99,7 @@ export const FormModal = () => {
                 <img src={Logo} width={40} height={40} alt="" />
                 <div className="form-tilte-text">
                   <h4>Digivalet</h4>
-                  <p>Create Visit</p>
+                  <p>Update Visitor</p>
                 </div>
               </div>
             </DialogTitle>
@@ -101,25 +113,12 @@ export const FormModal = () => {
                     Visitor Email
                   </Label>
                   <Input
+                    disabled
+                    defaultValue={data?.officeVisitor.email}
                     type="email"
                     id={"email-input"}
                     appearance="filled-darker"
-                    className="e"
-                    aria-invalid={errors.email ? "true" : "false"}
-                    {...register("email", {
-                      required: "This is a required field.",
-                      pattern: {
-                        value:
-                          /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, // Email regex pattern
-                        message: "Invalid email address",
-                      },
-                    })}
                   />
-                  {errors.email && (
-                    <p className="error-message">
-                      {errors?.email?.message?.toString()}
-                    </p>
-                  )}
                 </div>
                 <div className="input-field">
                   <Label required htmlFor={"fname-input"}>
@@ -133,6 +132,8 @@ export const FormModal = () => {
                       {...register("title", {
                         required: "This is a required field.",
                       })}
+                      defaultValue={data?.officeVisitor.title}
+                      defaultSelectedOptions={[data?.officeVisitor.title!]}
                       onOptionSelect={(_, data) => {
                         setValue("title", data.optionValue!);
                         trigger("title");
@@ -149,6 +150,7 @@ export const FormModal = () => {
                       type="text"
                       maxLength={50}
                       id={"fname-input"}
+                      defaultValue={data?.officeVisitor.fname}
                       appearance="filled-darker"
                       {...register("fname", {
                         required: "This is a required field.",
@@ -172,6 +174,7 @@ export const FormModal = () => {
                     type="text"
                     id={"lname-input"}
                     appearance="filled-darker"
+                    defaultValue={data?.officeVisitor.lname}
                     maxLength={30}
                     // onChange={(e) => setPurpose(e.target.value)}
                     {...register("lname", {
@@ -192,38 +195,12 @@ export const FormModal = () => {
                     appearance="filled-darker"
                     id="dropdown-id"
                     placeholder="Meeting Location"
-                    // clearable
+                    disabled
+                    defaultValue={data?.locationName}
                     className="visit-type-dropdown"
                     listbox={{ className: "dropdown-listbox" }}
                     positioning={"below"}
-                    {...register("locationName", {
-                      required: "This is a required field.",
-                    })}
-                    onOptionSelect={(_, data) => {
-                      setValue("locationName", data.optionText!);
-                      setValue("locationId", data.optionValue!);
-                      trigger("locationName");
-                    }}
-                  >
-                    {loadingVisitorTypesData
-                      ? "Loading..."
-                      : visitorLocationsData?.getPropertyLocations?.records.map(
-                          (option: VisitorType) => (
-                            <Option
-                              key={option.name}
-                              text={option.name}
-                              value={option.id}
-                            >
-                              <span className="option-text">{option.name}</span>
-                            </Option>
-                          )
-                        )}
-                  </Dropdown>
-                  {errors.locationName && (
-                    <p className="error-message">
-                      {errors?.locationName?.message?.toString()}
-                    </p>
-                  )}
+                  ></Dropdown>
                 </div>
                 <div className="input-field">
                   <Label required htmlFor="dropdown-id">
@@ -235,86 +212,31 @@ export const FormModal = () => {
                     id="dropdown-id"
                     placeholder="Visit Type"
                     positioning={"below"}
+                    disabled
+                    defaultValue={data?.officeVisitorType.name}
                     listbox={{ className: "dropdown-listbox" }}
-                    clearable
-                    {...register("officeVisitorType", {
-                      required: "This is a required field.",
-                    })}
-                    onOptionSelect={(_, data) => {
-                      console.log(data.optionValue);
-                      setValue("officeVisitorType", data.optionValue!);
-                      trigger("officeVisitorType");
-                      setVisitType(data.optionValue!);
-                    }}
-                  >
-                    {loadingVisitorLocationsData
-                      ? "Loading..."
-                      : visitorTypesData?.getOfficeVisitorTypes?.records.map(
-                          (option: VisitorLocationType) => (
-                            <Option
-                              key={option.name}
-                              text={option.name}
-                              value={option.id}
-                            >
-                              <span className="option-text">{option.name}</span>
-                            </Option>
-                          )
-                        )}
-                  </Dropdown>
-                  {errors.officeVisitorType && (
-                    <p className="error-message">
-                      {errors?.officeVisitorType?.message?.toString()}
-                    </p>
-                  )}
+                  ></Dropdown>
                 </div>
                 <div className="input-field">
                   <Field required label="Date">
-                    <DatePicker
+                    <Input
+                      disabled
                       appearance="filled-darker"
-                      isMonthPickerVisible={false}
-                      placeholder="Select a date..."
-                      {...register("startDate", {
-                        required: "This is a required field.",
-                      })}
-                      onSelectDate={() => trigger("startDate")}
+                      value={data?.startDate}
                     />
                   </Field>
-                  {errors.startDate && (
-                    <p className="error-message">
-                      {errors?.startDate?.message?.toString()}
-                    </p>
-                  )}
                 </div>
                 <div className="input-field">
                   <Label required htmlFor={"time-input"}>
                     Time
                   </Label>
-                  {/* <Input
-                    required
+                  <Input
+                    disabled
                     type="time"
                     id={"time-input"}
                     appearance="filled-darker"
-                    onChange={(e) => setPurpose(e.target.value)}
-                  /> */}
-                  <Field>
-                    <TimePicker
-                      hourCycle="h12"
-                      // required
-                      // defaultSelectedTime={new Date()}
-                      // clearable
-                      // increment={1}
-                      appearance="filled-darker"
-                      {...register("startTime", {
-                        required: "This is a required field.",
-                      })}
-                      onTimeChange={() => trigger("startTime")}
-                    />
-                  </Field>
-                  {errors.startTime && (
-                    <p className="error-message">
-                      {errors?.startTime?.message?.toString()}
-                    </p>
-                  )}
+                    value={data?.startTime}
+                  />
                 </div>
                 {customFieldsData?.getCustomFields &&
                   customFieldsData?.getCustomFields.map(
@@ -328,7 +250,7 @@ export const FormModal = () => {
                           type={field?.fieldType}
                           id={field?.id}
                           appearance="filled-darker"
-                          placeholder={field?.label}
+                          value={field.value}
                           {...register(`${field?.id}`, {
                             required: {
                               value: !field?.isOptional,
@@ -336,7 +258,7 @@ export const FormModal = () => {
                             },
                           })}
                         />
-                        {!field?.isOptional && errors.startTime && (
+                        {!field?.isOptional && errors[field?.id] && (
                           <p className="error-message">
                             {errors?.startTime?.message?.toString()}
                           </p>
@@ -350,9 +272,9 @@ export const FormModal = () => {
               <Button
                 type="submit"
                 appearance="primary"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !isFormChanged}
               >
-                {isSubmitting ? "Creating..." : "Create"}
+                {isSubmitting ? "Updating..." : "Update"}
               </Button>
             </DialogActions>
           </DialogBody>

@@ -31,8 +31,12 @@ export type Visitor = {
     id: string;
   };
   officeVisitor: {
-    fullName: string;
+    id: string;
     email: string;
+    fullName: string;
+    title: string;
+    fname: string;
+    lname: string;
   };
   customFields: {
     label: string;

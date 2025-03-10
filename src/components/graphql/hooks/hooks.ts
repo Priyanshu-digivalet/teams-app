@@ -8,6 +8,7 @@ import {
 } from "../queries/queries";
 import {
   addOfficeVisit,
+  updateOfficeVisitorById,
   updateOfficeVisitStatusById,
 } from "../mutations/mutations";
 import moment from "moment";
@@ -38,7 +39,7 @@ export const useFetchExistingUser = () => {
     behaviorId =
       data.fetchExistingUser[0].userIdentityBehaviorMapping[0].behaviorId;
   }
-  console.log("at hook: ", projectId, propertyId, behaviorId);
+  // console.log("at hook: ", projectId, propertyId, behaviorId);
   return { loadingExistingUserData: loading, fetchUserError: error };
 };
 
@@ -241,6 +242,40 @@ export const useUpdateVisitorStatus = () => {
     updateStatusError: error,
     updateStatus,
     updateStatusFromModal,
+  };
+};
+
+export const useUpdateOfficeVisitorById = () => {
+  const [updateOfficeVisitorByIdFunction, { loading, error }] = useMutation(
+    updateOfficeVisitorById
+  );
+  const updateVisitorById = (id: string, data: any, customFieldsData: any) => {
+    // console.log(id, data, customFieldsData);
+    updateOfficeVisitorByIdFunction({
+      variables: {
+        input: {
+          fname: data.fname,
+          id: id,
+          lname: data.lname,
+          title: data.title,
+          customFields: customFieldsData?.getCustomFields.map((field: any) => {
+            return {
+              id: `${field.id}`,
+              value: data?.[field.id],
+            };
+          }),
+        },
+      },
+      refetchQueries: [getOfficeVisits],
+    });
+  };
+  if (error) {
+    console.log(error);
+  }
+  return {
+    loadingUpdateVisitorById: loading,
+    updateVisitorByIdError: error,
+    updateVisitorById,
   };
 };
 

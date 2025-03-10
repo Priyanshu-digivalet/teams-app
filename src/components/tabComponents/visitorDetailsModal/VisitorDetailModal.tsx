@@ -127,27 +127,29 @@ export const VisitorDetailModal = ({
                 ))}
             </div>
           </DialogContent>
-          <DialogActions>
-            <Button
-              appearance="secondary"
-              onClick={() => {
-                updateStatusFromModal(data?.id!, "DENIED");
-                if (!updateStatusError) setIsVisitorDetailModalOpen(false);
-              }}
-            >
-              Reject
-            </Button>
-            <Button
-              type="submit"
-              appearance="primary"
-              onClick={() => {
-                updateStatusFromModal(data?.id!, "CONFIRMED");
-                if (!updateStatusError) setIsVisitorDetailModalOpen(false);
-              }}
-            >
-              Accept
-            </Button>
-          </DialogActions>
+          {data?.status === "WAITING" && (
+            <DialogActions>
+              <Button
+                appearance="secondary"
+                onClick={() => {
+                  updateStatusFromModal(data?.id!, "DENIED");
+                  if (!updateStatusError) setIsVisitorDetailModalOpen(false);
+                }}
+              >
+                Reject
+              </Button>
+              <Button
+                type="submit"
+                appearance="primary"
+                onClick={() => {
+                  updateStatusFromModal(data?.id!, "CONFIRMED");
+                  if (!updateStatusError) setIsVisitorDetailModalOpen(false);
+                }}
+              >
+                Accept
+              </Button>
+            </DialogActions>
+          )}
         </DialogBody>
       </DialogSurface>
     </Dialog>

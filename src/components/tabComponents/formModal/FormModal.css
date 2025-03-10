@@ -1,0 +1,120 @@
+.form-title-box {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  .form-tilte-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    padding-left: 12px;
+    h4 {
+      padding: 0;
+      margin: 0;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    p {
+      padding: 0;
+      margin: 0;
+      color: #616161;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 16px;
+    }
+  }
+}
+.form-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 24px;
+  margin-right: 50px;
+  margin-bottom: 114px;
+}
+.input-field {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  label {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0%;
+    margin-bottom: 8px;
+    color: rgba(97, 97, 97, 1);
+  }
+  span {
+    width: 100%;
+    input {
+      width: 100%;
+    }
+  }
+}
+.error-message {
+  color: red;
+  margin: 5px 0px;
+}
+.title-dropdown {
+  min-width: 70px !important;
+  width: 70px !important;
+  max-width: 70px !important;
+}
+.title-fname-container {
+  display: flex;
+  gap: 5px;
+  #fname-input {
+    max-width: 173px;
+  }
+}
+.email-dropdown {
+  position: absolute;
+  width: 100%;
+  top: 62px;
+  background-color: var(--colorNeutralBackground1);
+  box-shadow: var(--shadow16);
+  z-index: 10;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overflow-wrap: break-word;
+  max-height: 200px;
+  padding: 0px 10px;
+  span {
+    width: 0px;
+  }
+}
+.email-dropdown-child {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+}
+.dropdown-listbox {
+  max-height: 200px !important;
+}
+.option-text {
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+.visit-type-dropdown {
+  max-width: 260px;
+  .fui-Dropdown__button {
+    width: 258px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* calendar icon alignment */
+.fui-Input__contentAfter {
+  justify-content: right;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  background-color: transparent !important;
+  color: light-dark(black, white) !important;
+  transition: background-color 0s 600000s, color 0s 600000s !important;
+}

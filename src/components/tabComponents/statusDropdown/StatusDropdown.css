@@ -1,0 +1,16 @@
+.custom-dropdown {
+  color: rgb(89, 37, 220);
+  .fui-Dropdown {
+    min-width: 104px !important;
+  }
+}
+.option-div {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+.remove-bottom-border::after {
+  display: none !important;
+}

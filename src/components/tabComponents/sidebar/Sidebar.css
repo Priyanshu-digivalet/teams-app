@@ -1,0 +1,26 @@
+.sidebar {
+  width: 200px;
+  height: calc(100vh - 56px);
+  background-color: var(--colorNeutralBackground1);
+  position: absolute;
+  left: -205;
+  top: 51;
+  padding: 20px 5px 0 5px;
+  display: flex;
+  flex-direction: column;
+  transition: left 0.5s ease-in-out;
+  p {
+    padding: 5px 0 7px 16px;
+    font-size: 14px;
+    border-radius: 5px;
+    margin: 0;
+  }
+}
+.open-sidebar {
+  left: 0;
+}
+
+/* active color if a section is active */
+.fui-MenuItem.active {
+  background-color: var(--colorNeutralBackground3) !important;
+}

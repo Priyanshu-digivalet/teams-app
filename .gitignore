@@ -1,0 +1,26 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# TeamsFx files
+env/.env.*.user
+env/.env.local
+.DS_Store
+build
+appPackage/build
+.deployment
+.localConfigs
+.vscode
+__blobstorage__
+__queuestorage__
+__azurite_db_blob__.json
+__azurite_db_blob_extent__.json
+__azurite_db_queue__.json
+__azurite_db_queue_extent__.json
+__azurite_db_table__.json
+
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# Dev tool directories
+/devTools/

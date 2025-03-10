@@ -1,0 +1,27 @@
+/* setting table background color */
+.fui-DataGrid {
+  background-color: var(--colorNeutralBackground1) !important;
+}
+
+/* removing hover effect for all rows */
+.fui-DataGridRow:hover {
+  background-color: transparent !important;
+}
+
+.more-button,
+.more-button:hover {
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.location-icon {
+  padding-left: 10px;
+}
+
+.loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,0 +1,23 @@
+@font-face {
+  font-family: "Segoe-UI";
+  src: url("../SegoeUI-VF/SegoeUI-VF.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Display-Bold.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Display-Light.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Display-Semibold.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Display-Semilight.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Display.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Small-Bold.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Small-Light.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Small-Semibold.ttf"),
+    url("../SegoeUI-VF//Segoe-UI-Variable-Static-Small-Semilight.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Small.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Text-Bold.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Text-Light.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Text-Semibold.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Text-Semilight.ttf"),
+    url("../SegoeUI-VF/Segoe-UI-Variable-Static-Text.ttf");
+  font-weight: normal;
+  font-style: normal;
+  font-optical-sizing: auto;
+  font-display: swap;
+}

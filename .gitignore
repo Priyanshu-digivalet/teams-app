@@ -7,7 +7,6 @@ build
 appPackage/build
 .deployment
 .localConfigs
-.vscode
 __blobstorage__
 __queuestorage__
 __azurite_db_blob__.json

@@ -199,10 +199,19 @@ export const RecordTable = ({
       },
     }),
   ];
+  console.log(viditorData?.getOfficeVisits?.records);
 
   return loadingVisitors ? (
     <div className="loading">
       <Spinner size="large" />
+    </div>
+  ) : viditorData?.getOfficeVisits?.records.length === undefined ? (
+    <div className="loading">
+      <h1>Network Error</h1>
+    </div>
+  ) : viditorData?.getOfficeVisits?.records.length === 0 ? (
+    <div className="loading">
+      <h1>No Data!</h1>
     </div>
   ) : (
     <>

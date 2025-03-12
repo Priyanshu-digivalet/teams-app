@@ -19,6 +19,7 @@ export let propertyId = "";
 export let behaviorId = "";
 export let tenentId = "";
 
+// queries
 export const useFetchExistingUser = () => {
   const { loading, data, error } = useQuery(fetchExistingUser, {
     variables: {
@@ -28,16 +29,17 @@ export const useFetchExistingUser = () => {
     },
   });
   if (error) {
-    console.log(error);
-    alert("Network Error");
+    console.log("fetchuser ", error);
+    // alert("Network Error");
+    // return;
   }
   if (!loading) {
     projectId =
-      data.fetchExistingUser[0].userIdentityBehaviorMapping[0].projectId;
+      data?.fetchExistingUser[0].userIdentityBehaviorMapping[0].projectId;
     propertyId =
-      data.fetchExistingUser[0].userIdentityBehaviorMapping[0].propertyId;
+      data?.fetchExistingUser[0].userIdentityBehaviorMapping[0].propertyId;
     behaviorId =
-      data.fetchExistingUser[0].userIdentityBehaviorMapping[0].behaviorId;
+      data?.fetchExistingUser[0].userIdentityBehaviorMapping[0].behaviorId;
   }
   // console.log("at hook: ", projectId, propertyId, behaviorId);
   return { loadingExistingUserData: loading, fetchUserError: error };
@@ -155,6 +157,7 @@ export const useCustomFields = (resourceTypeId: string) => {
   return { loadingCustomFieldsData: loading, customFieldsData: data };
 };
 
+// mutations
 export const useAddOfficeVisit = () => {
   const [addData, { data, loading, error }] = useMutation(addOfficeVisit);
   const addOfficeVisitorFunction = (formData: any, customFieldsData: any) => {
@@ -168,8 +171,10 @@ export const useAddOfficeVisit = () => {
           officeVisitTypeId: formData.officeVisitorType,
           locationId: formData?.locationId,
           locationName: formData?.locationName,
+          hoursType: "CUSTOM",
           startDate: moment(formData?.startDate).format("YYYY-MM-DD"),
           startTime: moment(formData?.startTime, "hh:mm A").format("HH:mm"),
+          endTime: "23:59",
           officeVisitors: [
             {
               fname: formData.fname,

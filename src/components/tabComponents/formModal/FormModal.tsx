@@ -14,7 +14,7 @@ import {
   Field,
 } from "@fluentui/react-components";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Logo from "../../assets/images/digivaletLogo.svg";
 import "./FormModal.css";
 import { TimePicker } from "@fluentui/react-timepicker-compat";
@@ -30,10 +30,15 @@ import { useForm } from "react-hook-form";
 export const FormModal = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [visitType, setVisitType] = useState("");
+  const [isSubmittingForm, setIsSubmittingForm] = useState(false);
 
   const { loadingVisitorTypesData, visitorTypesData } = useVisitorTypes();
   const { customFieldsData } = useCustomFields(visitType);
-  const { addOfficeVisitorFunction, addVisitorDataError } = useAddOfficeVisit();
+  const {
+    addOfficeVisitorFunction,
+    addVisitorDataError,
+    loadingaddVisitorData,
+  } = useAddOfficeVisit();
   const { loadingVisitorLocationsData, visitorLocationsData } =
     usePropertyLocations();
 
@@ -43,20 +48,31 @@ export const FormModal = () => {
     setValue,
     trigger,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({ mode: "onTouched", reValidateMode: "onChange" });
 
   const titleOptions = ["Mr", "Mrs", "Ms", "Miss"];
 
   function onsubmit(data: any) {
     // console.log(data);
+    setIsSubmittingForm(true);
     addOfficeVisitorFunction(data, customFieldsData);
     // console.log(addVisitorDataError);
-    if (!addVisitorDataError) {
-      reset();
-      setIsDialogOpen(false);
-    }
   }
+
+  useEffect(() => {
+    if (isSubmittingForm) {
+      if (addVisitorDataError) {
+        console.error("Error from backend:", addVisitorDataError);
+        alert("Error from backend");
+        setIsSubmittingForm(false);
+      } else if (!loadingaddVisitorData) {
+        reset();
+        setIsDialogOpen(false);
+        setIsSubmittingForm(false);
+      }
+    }
+  }, [addVisitorDataError, loadingaddVisitorData]);
 
   return (
     <Dialog
@@ -350,9 +366,9 @@ export const FormModal = () => {
               <Button
                 type="submit"
                 appearance="primary"
-                disabled={isSubmitting}
+                disabled={isSubmittingForm}
               >
-                {isSubmitting ? "Creating..." : "Create"}
+                {isSubmittingForm ? "Creating..." : "Create"}
               </Button>
             </DialogActions>
           </DialogBody>

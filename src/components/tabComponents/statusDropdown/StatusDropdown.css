@@ -14,3 +14,13 @@
 .remove-bottom-border::after {
   display: none !important;
 }
+
+.dropdown-button {
+  background: transparent;
+  border: none;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 2px 0px;
+  line-height: 17px;
+}

@@ -1,5 +1,5 @@
 import { Dropdown, Option } from "@fluentui/react-components";
-import { ChevronDownRegular, CircleFilled } from "@fluentui/react-icons";
+import { ChevronDownFilled, CircleFilled } from "@fluentui/react-icons";
 import { Visitor } from "../../types";
 import "./StatusDropdown.css";
 import { useEffect, useState } from "react";
@@ -108,7 +108,7 @@ export const StatusDropdown = ({ item }: { item: Visitor }) => {
         className={selectedOption !== "WAITING" ? "remove-bottom-border" : ""}
         expandIcon={
           selectedOption === "WAITING" ? (
-            <ChevronDownRegular color={selectionStyle[selectedOption].color} />
+            <ChevronDownFilled color={selectionStyle[selectedOption].color} />
           ) : null
         }
         style={selectionStyle[selectedOption!]?.style}
@@ -116,16 +116,14 @@ export const StatusDropdown = ({ item }: { item: Visitor }) => {
         positioning={"below"}
         value={selectedOption}
         button={
-          <button
+          <div
             style={{
               color: selectionStyle[selectedOption!]?.color,
-              background: "transparent",
-              border: "none",
-              textAlign: "center",
             }}
+            className="dropdown-button"
           >
             {toTitleCase(selectedOption!)}
-          </button>
+          </div>
         }
         onOpenChange={(_, data) => {
           if (selectedOption === "WAITING") {

@@ -32,9 +32,6 @@ export default function App() {
       clientId: config.clientId!,
     });
   const { loadingExistingUserData } = useFetchExistingUser();
-  // if (fetchUserError) {
-  //   alert("Network Error");
-  // }
   return (
     <TeamsFxContext.Provider
       value={{ theme, themeString, teamsUserCredential }}

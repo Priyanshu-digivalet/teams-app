@@ -31,9 +31,14 @@ export const EditFormModal = ({
   setIsVisitorEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [isFormChanged, setIsFormChanged] = useState(false);
+  const [isSubmittingForm, setIsSubmittingForm] = useState(false);
+
   const { customFieldsData } = useCustomFields(data?.officeVisitorType.id!);
-  const { updateVisitorById, updateVisitorByIdError } =
-    useUpdateOfficeVisitorById();
+  const {
+    updateVisitorById,
+    updateVisitorByIdError,
+    loadingUpdateVisitorById,
+  } = useUpdateOfficeVisitorById();
 
   const {
     register,
@@ -42,7 +47,7 @@ export const EditFormModal = ({
     trigger,
     reset,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({
     mode: "onTouched",
     reValidateMode: "onChange",
@@ -68,12 +73,23 @@ export const EditFormModal = ({
 
   function onsubmit(formData: any) {
     // console.log(formData);
+    setIsSubmittingForm(true);
     updateVisitorById(data?.officeVisitor.id!, formData, customFieldsData);
-    if (!updateVisitorByIdError) {
-      reset();
-      setIsVisitorEditModalOpen(false);
-    }
   }
+
+  useEffect(() => {
+    if (isSubmittingForm) {
+      if (updateVisitorByIdError) {
+        console.error("Error from backend:", updateVisitorByIdError);
+        alert("Error from backend");
+        setIsSubmittingForm(false);
+      } else if (!updateVisitorByIdError) {
+        reset();
+        setIsVisitorEditModalOpen(false);
+        setIsSubmittingForm(false);
+      }
+    }
+  }, [updateVisitorByIdError, loadingUpdateVisitorById]);
 
   return (
     <Dialog
@@ -272,9 +288,9 @@ export const EditFormModal = ({
               <Button
                 type="submit"
                 appearance="primary"
-                disabled={isSubmitting || !isFormChanged}
+                disabled={isSubmittingForm || !isFormChanged}
               >
-                {isSubmitting ? "Updating..." : "Update"}
+                {isSubmittingForm ? "Updating..." : "Update"}
               </Button>
             </DialogActions>
           </DialogBody>
